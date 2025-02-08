@@ -25,32 +25,30 @@ export const initializeUserInDatabase = async (user: any, isArtist: boolean = fa
   try {
     // If artist, store in Artists collection
     if (isArtist) {
-      // Get username by replacing all special characters with commas
-      const artistId = user.email.replace(/[@.]/g, ',');
-      console.log('Attempting to create artist:', artistId);
+      // Create a safe key by removing invalid characters
+      const safeKey = user.email
+        .replace(/[.#$[\]]/g, '_') // Replace invalid characters with underscore
+        .replace('@', 'AT'); // Replace @ with AT
+      
+      console.log('Creating artist with key:', safeKey);
       
       // Create reference to existing artist to check if it exists
-      const artistRef = ref(database, `Artists/${artistId}`);
-      const snapshot = await get(artistRef);
+      const artistRef = ref(database, `Artists/${safeKey}`);
       
-      if (!snapshot.exists()) {
-        // Only create if doesn't exist
-        await set(artistRef, {
-          approvalStatus: true,
-          bookingCount: 0,
-          busyDays: {},
-          details: {
-            email: user.email
-          },
-          email: user.email,
-          photoUrl: user.photoURL || '',
-          posts: {},
-          profileViews: 0
-        });
-        console.log('Successfully created artist:', artistId);
-      } else {
-        console.log('Artist already exists:', artistId);
-      }
+      // Always update/create the artist entry
+      await set(artistRef, {
+        approvalStatus: true,
+        bookingCount: 0,
+        busyDays: {},
+        details: {
+          email: user.email
+        },
+        email: user.email,
+        photoUrl: user.photoURL || '',
+        posts: {},
+        profileViews: 0
+      });
+      console.log('Artist profile created/updated:', user.email);
     }
     
     // Store in users collection
@@ -62,9 +60,9 @@ export const initializeUserInDatabase = async (user: any, isArtist: boolean = fa
       lastLogin: new Date().toISOString(),
       isArtist: isArtist
     });
-    console.log("User initialized in database");
+    console.log("User data saved:", user.email);
   } catch (error) {
-    console.error("Error initializing user in database:", error);
+    console.error("Error in database operation:", error);
     if (error instanceof Error) {
       console.error('Error details:', error.message);
     }
