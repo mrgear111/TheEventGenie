@@ -1,8 +1,9 @@
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
-import { Search, X, MapPin, Sun, Building2, Mountain, Landmark, Coffee, Building } from 'lucide-react'
+import { Search, X } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 
 interface CitySelectorProps {
   isOpen: boolean
@@ -11,154 +12,131 @@ interface CitySelectorProps {
   currentCity: string
 }
 
-// Added icons and colors for each city
 const cities = [
-  { 
-    name: 'Jaipur', 
-    state: 'Rajasthan',
-    icon: Sun,
-    color: 'text-amber-500',
-    bgColor: 'bg-amber-50'
+  {
+    name: 'New Delhi',
+    image: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?w=800&auto=format&fit=crop&q=60', // India Gate
+    monument: 'India Gate'
   },
-  { 
-    name: 'Bangalore', 
-    state: 'Karnataka',
-    icon: Coffee,
-    color: 'text-green-500',
-    bgColor: 'bg-green-50'
+  {
+    name: 'Bangalore',
+    image: 'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?w=800&auto=format&fit=crop&q=60', // Vidhana Soudha
+    monument: 'Vidhana Soudha'
   },
-  { 
-    name: 'Pune', 
-    state: 'Maharashtra',
-    icon: Mountain,
-    color: 'text-blue-500',
-    bgColor: 'bg-blue-50'
+  {
+    name: 'Mumbai',
+    image: 'https://images.unsplash.com/photo-1529253355930-ddbe423a2ac7?w=800&auto=format&fit=crop&q=60', // Gateway of India
+    monument: 'Gateway of India'
   },
-  { 
-    name: 'Delhi', 
-    state: 'Delhi',
-    icon: Landmark,
-    color: 'text-red-500',
-    bgColor: 'bg-red-50'
+  {
+    name: 'Navi Mumbai',
+    image: 'https://images.unsplash.com/photo-1567157577867-05ccb1388e66?w=800&auto=format&fit=crop&q=60', // City skyline
+    monument: 'City Center'
   },
-  { 
-    name: 'Hyderabad', 
-    state: 'Telangana',
-    icon: Building2,
-    color: 'text-purple-500',
-    bgColor: 'bg-purple-50'
+  {
+    name: 'Hyderabad',
+    image: 'https://images.unsplash.com/photo-1572638207014-c05f7a991d05?w=800&auto=format&fit=crop&q=60', // Charminar at night
+    monument: 'Charminar'
+  },
+  {
+    name: 'Guwahati',
+    image: 'https://images.unsplash.com/photo-1590077428593-a55bb07c4665?w=800&auto=format&fit=crop&q=60', // Kamakhya Temple
+    monument: 'Temple'
+  },
+  {
+    name: 'Chandigarh',
+    image: 'https://images.unsplash.com/photo-1588416936097-41850ab3d86d?w=800&auto=format&fit=crop&q=60', // Rock Garden
+    monument: 'Rock Garden'
+  },
+  {
+    name: 'Goa',
+    image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=800&auto=format&fit=crop&q=60', // Beach
+    monument: 'Beach'
   }
 ]
 
-export default function CitySelector({ isOpen, onClose, onSelect, currentCity }: CitySelectorProps) {
+export default function CitySelector({ isOpen, onClose, onSelect }: CitySelectorProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [filteredCities, setFilteredCities] = useState(cities)
-  const [noResults, setNoResults] = useState(false)
 
   useEffect(() => {
     const filtered = cities.filter(city => 
-      city.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      city.state.toLowerCase().includes(searchQuery.toLowerCase())
+      city.name.toLowerCase().includes(searchQuery.toLowerCase())
     )
     setFilteredCities(filtered)
-    setNoResults(searchQuery.length > 0 && filtered.length === 0)
   }, [searchQuery])
 
   return (
     <AnimatePresence>
       {isOpen && (
-        <>
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 bg-black/50"
-            style={{ zIndex: 9998 }}
-          />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-center justify-center px-4"
+        >
+          <div className="bg-white rounded-lg w-full max-w-3xl">
+            <div className="p-8">
+              <h2 className="text-3xl font-bold mb-8">
+                Explore pop culture based events around you
+              </h2>
 
-          {/* Modal */}
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            style={{ zIndex: 9999 }}
-            className="fixed top-[72px] left-1/2 -translate-x-1/2 w-[400px] bg-white rounded-2xl shadow-xl"
-          >
-            {/* Header */}
-            <div className="flex justify-between items-center px-6 py-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-t-2xl">
-              <h2 className="text-lg font-medium text-white">Select Your City</h2>
-              <button 
-                onClick={onClose}
-                className="text-white/80 hover:text-white transition-opacity"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Search */}
-            <div className="p-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              {/* Search Bar */}
+              <div className="relative mb-12">
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-500" />
                 <input
                   type="text"
-                  placeholder="Search cities..."
+                  placeholder="Search city of your choice"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 bg-gray-50 rounded-xl text-gray-900 placeholder:text-gray-500 focus:outline-none"
-                  autoFocus
+                  className="w-full pl-6 pr-32 py-4 text-lg border-none focus:outline-none shadow-sm"
+                />
+                <button className="absolute right-4 top-1/2 -translate-y-1/2 px-6 py-2 bg-black text-white rounded-lg">
+                  Use location
+                </button>
+              </div>
+
+              {/* Cities Grid */}
+              <div className="grid grid-cols-4 md:grid-cols-8 gap-8">
+                {filteredCities.map((city) => (
+                  <button
+                    key={city.name}
+                    onClick={() => {
+                      onSelect(city.name)
+                      onClose()
+                    }}
+                    className="flex flex-col items-center group"
+                  >
+                    <div className="w-20 h-20 rounded-full overflow-hidden mb-2 group-hover:ring-2 ring-blue-500 transition-all">
+                      <Image
+                        src={city.image}
+                        alt={city.monument}
+                        width={80}
+                        height={80}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <span className="text-gray-900 text-sm text-center">
+                      {city.name}
+                    </span>
+                  </button>
+                ))}
+              </div>
+
+              {/* City Skyline */}
+              <div className="mt-12">
+                <Image
+                  src="https://images.unsplash.com/photo-1598633919327-67d9b63e5ed6?w=1200&auto=format&fit=crop&q=60"
+                  alt="Indian Cities Skyline"
+                  width={1200}
+                  height={200}
+                  className="w-full h-32 object-cover opacity-80"
+                  priority
                 />
               </div>
             </div>
-
-            {/* Cities List */}
-            <div className="max-h-[320px] overflow-y-auto">
-              {noResults ? (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="p-8 text-center"
-                >
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-50 mb-4">
-                    <Building className="w-8 h-8 text-blue-500" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    We're Expanding!
-                  </h3>
-                  <p className="text-gray-500 mb-4">
-                    We haven't reached {searchQuery} yet, but we're growing fast! We'll be there soon.
-                  </p>
-                  <div className="text-sm text-gray-400">
-                    Currently available in {cities.length} cities across India
-                  </div>
-                </motion.div>
-              ) : (
-                filteredCities.map((city) => {
-                  const Icon = city.icon
-                  return (
-                    <button
-                      key={city.name}
-                      onClick={() => {
-                        onSelect(city.name)
-                        onClose()
-                      }}
-                      className="w-full flex items-center gap-3 px-6 py-3 hover:bg-gray-50 transition-colors group"
-                    >
-                      <div className={`w-10 h-10 rounded-full ${city.bgColor} flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                        <Icon className={`w-5 h-5 ${city.color}`} />
-                      </div>
-                      <div className="text-left">
-                        <div className="text-gray-900 font-medium">{city.name}</div>
-                        <div className="text-sm text-gray-500">{city.state}</div>
-                      </div>
-                    </button>
-                  )
-                })
-              )}
-            </div>
-          </motion.div>
-        </>
+          </div>
+        </motion.div>
       )}
     </AnimatePresence>
   )

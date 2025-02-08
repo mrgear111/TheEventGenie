@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
-import { MapPin, Search, Menu, Bell, LogOut } from 'lucide-react'
+import { MapPin, Search, Menu, Bell, LogOut, Mail } from 'lucide-react'
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { auth } from '../lib/firebase'
@@ -75,17 +75,21 @@ export default function Navbar() {
                 EventGenie
               </Link>
 
-              <div className="hidden md:flex items-center gap-4">
-                {['Feeds', 'Events'].map((item) => (
-                  <Link 
-                    key={item}
-                    href={`/${item.toLowerCase()}`} 
-                    className="text-gray-600 hover:text-gray-900 relative group py-1"
-                  >
-                    {item}
-                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
-                  </Link>
-                ))}
+              {/* Navigation Links */}
+              <div className="hidden md:flex items-center gap-6">
+                <Link href="/feeds" className="text-gray-600 hover:text-gray-900">
+                  Feeds
+                </Link>
+                <Link href="/events" className="text-gray-600 hover:text-gray-900">
+                  Events
+                </Link>
+                <Link href="/artists" className="text-gray-600 hover:text-gray-900">
+                  Artists
+                </Link>
+                <Link href="/contact" className="text-gray-600 hover:text-gray-900 flex items-center gap-1">
+                  <Mail className="w-4 h-4" />
+                  Contact Us
+                </Link>
               </div>
             </div>
 

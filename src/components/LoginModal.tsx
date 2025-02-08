@@ -14,14 +14,16 @@ interface LoginModalProps {
 
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const [error, setError] = useState<string | null>(null)
+  const [isArtist, setIsArtist] = useState(false)
 
   const handleGoogleSignIn = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider)
-      console.log('Signed in:', result.user.email)
+      console.log('Signing in as:', isArtist ? 'Artist' : 'User'); // Debug log
+      console.log('User email:', result.user.email);
       
-      // Initialize user in database
-      await initializeUserInDatabase(result.user)
+      // Initialize user in database with artist flag
+      await initializeUserInDatabase(result.user, isArtist)
       
       onClose()
     } catch (error: any) {
@@ -80,6 +82,30 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 </p>
               </div>
 
+              {/* User Type Selection */}
+              <div className="flex gap-4 mb-6">
+                <button
+                  onClick={() => setIsArtist(false)}
+                  className={`flex-1 py-2 px-4 rounded-lg transition-all ${
+                    !isArtist 
+                      ? 'bg-blue-500 text-white' 
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  User
+                </button>
+                <button
+                  onClick={() => setIsArtist(true)}
+                  className={`flex-1 py-2 px-4 rounded-lg transition-all ${
+                    isArtist 
+                      ? 'bg-blue-500 text-white' 
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  Artist
+                </button>
+              </div>
+
               {/* Google Sign In Button */}
               <button 
                 onClick={handleGoogleSignIn}
@@ -88,7 +114,9 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
                   <span className="text-[#18191B] text-sm font-medium">G</span>
                 </div>
-                <span className="text-white text-base">Continue with Google</span>
+                <span className="text-white text-base">
+                  Continue with Google as {isArtist ? 'Artist' : 'User'}
+                </span>
               </button>
 
               {/* Error Message */}

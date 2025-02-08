@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, ref, set, get } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDHqkFmOgKRS1c6msmkvxAgS6EsvEPNE9Y",
@@ -19,20 +19,55 @@ export const database = getDatabase(app);
 export const googleProvider = new GoogleAuthProvider();
 
 // Initialize user in database after login
-export const initializeUserInDatabase = async (user: any) => {
+export const initializeUserInDatabase = async (user: any, isArtist: boolean = false) => {
   if (!user) return;
   
   try {
+    // If artist, store in Artists collection
+    if (isArtist) {
+      // Get username by replacing all special characters with commas
+      const artistId = user.email.replace(/[@.]/g, ',');
+      console.log('Attempting to create artist:', artistId);
+      
+      // Create reference to existing artist to check if it exists
+      const artistRef = ref(database, `Artists/${artistId}`);
+      const snapshot = await get(artistRef);
+      
+      if (!snapshot.exists()) {
+        // Only create if doesn't exist
+        await set(artistRef, {
+          approvalStatus: true,
+          bookingCount: 0,
+          busyDays: {},
+          details: {
+            email: user.email
+          },
+          email: user.email,
+          photoUrl: user.photoURL || '',
+          posts: {},
+          profileViews: 0
+        });
+        console.log('Successfully created artist:', artistId);
+      } else {
+        console.log('Artist already exists:', artistId);
+      }
+    }
+    
+    // Store in users collection
     const userRef = ref(database, `users/${user.uid}`);
     await set(userRef, {
       email: user.email,
       displayName: user.displayName,
-      photoURL: user.photoURL,
+      photoURL: user.photoURL || '',
       lastLogin: new Date().toISOString(),
+      isArtist: isArtist
     });
     console.log("User initialized in database");
   } catch (error) {
     console.error("Error initializing user in database:", error);
+    if (error instanceof Error) {
+      console.error('Error details:', error.message);
+    }
   }
 };
 
