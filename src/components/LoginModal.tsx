@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { X } from 'lucide-react'
 import { useState } from 'react'
-import { auth, googleProvider } from '../lib/firebase'
+import { auth, googleProvider, initializeUserInDatabase } from '../lib/firebase'
 import { signInWithPopup } from 'firebase/auth'
 import Image from 'next/image'
 
@@ -19,6 +19,10 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
     try {
       const result = await signInWithPopup(auth, googleProvider)
       console.log('Signed in:', result.user.email)
+      
+      // Initialize user in database
+      await initializeUserInDatabase(result.user)
+      
       onClose()
     } catch (error: any) {
       console.error('Error signing in with Google:', error)

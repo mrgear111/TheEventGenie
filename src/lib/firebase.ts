@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
-import { getDatabase } from "firebase/database";
+import { getDatabase, ref, set } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDHqkFmOgKRS1c6msmkvxAgS6EsvEPNE9Y",
@@ -17,6 +17,24 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const database = getDatabase(app);
 export const googleProvider = new GoogleAuthProvider();
+
+// Initialize user in database after login
+export const initializeUserInDatabase = async (user: any) => {
+  if (!user) return;
+  
+  try {
+    const userRef = ref(database, `users/${user.uid}`);
+    await set(userRef, {
+      email: user.email,
+      displayName: user.displayName,
+      photoURL: user.photoURL,
+      lastLogin: new Date().toISOString(),
+    });
+    console.log("User initialized in database");
+  } catch (error) {
+    console.error("Error initializing user in database:", error);
+  }
+};
 
 // Add scopes for additional user info
 googleProvider.addScope('https://www.googleapis.com/auth/userinfo.profile');
