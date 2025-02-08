@@ -3,11 +3,74 @@
 @tailwind utilities;
 
 :root {
-  --background: #000000;
-  --foreground: #ffffff;
+  --background: #ffffff;
+  --foreground: #111111;
+  --primary: #2563eb;
+  --primary-light: #3b82f6;
+  --secondary: #6366f1;
+  --accent: #f0f9ff;
+  --muted: #94a3b8;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
+}
+
+.hover-shadow {
+  box-shadow: var(--accent-glow);
+}
+
+.gradient-text {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.hero-pattern {
+  background-image: radial-gradient(var(--primary) 0.5px, transparent 0.5px),
+    radial-gradient(var(--secondary) 0.5px, transparent 0.5px);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+  opacity: 0.1;
+}
+
+.floating {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.gradient-mask {
+  mask-image: linear-gradient(to bottom, 
+    transparent 0%,
+    rgba(0, 0, 0, 0.5) 25%,
+    rgba(0, 0, 0, 1) 50%,
+    rgba(0, 0, 0, 0.5) 75%,
+    transparent 100%
+  );
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
 } 
