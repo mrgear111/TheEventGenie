@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: [], // Add your domains here if using external images
+    domains: ['images.unsplash.com', 'lh3.googleusercontent.com'],
     formats: ['image/webp'],
     remotePatterns: [],
   },

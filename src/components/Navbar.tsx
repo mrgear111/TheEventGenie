@@ -2,15 +2,30 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
-import { MapPin, Search, Menu, Bell } from 'lucide-react'
+import Image from 'next/image'
+import { MapPin, Search, Menu, Bell, LogOut } from 'lucide-react'
 import { useState } from 'react'
+import { useAuth } from '../context/AuthContext'
+import { auth } from '../lib/firebase'
+import { signOut } from 'firebase/auth'
 import CitySelector from './CitySelector'
+import LoginModal from './LoginModal'
 
 export default function Navbar() {
+  const { user } = useAuth()
   const [showBanner, setShowBanner] = useState(true)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isCitySelectorOpen, setIsCitySelectorOpen] = useState(false)
   const [selectedCity, setSelectedCity] = useState('Panchkula')
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth)
+    } catch (error) {
+      console.error('Error signing out:', error)
+    }
+  }
 
   return (
     <motion.nav 
@@ -27,7 +42,7 @@ export default function Navbar() {
             exit={{ height: 0, opacity: 0 }}
             className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white overflow-hidden"
           >
-            <div className="max-w-7xl mx-auto py-2 px-4 text-center text-sm">
+            <div className="max-w-7xl mx-auto py-1 px-4 text-center text-sm">
               <div className="flex items-center justify-center gap-2">
                 <span className="inline-block w-5 h-5 animate-pulse">🎵</span>
                 Launching Soon! Join our waitlist to get early access and exclusive benefits
@@ -49,17 +64,17 @@ export default function Navbar() {
 
       {/* Main Navigation */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-14">
           {/* Left Section */}
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-6">
             <Link 
               href="/" 
-              className="text-2xl font-bold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-transparent bg-clip-text hover:from-indigo-600 hover:to-pink-600 transition-all"
+              className="text-xl font-bold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-transparent bg-clip-text hover:from-indigo-600 hover:to-pink-600 transition-all"
             >
               EventGenie
             </Link>
 
-            <div className="hidden md:flex items-center gap-6">
+            <div className="hidden md:flex items-center gap-4">
               {['Feeds', 'Events'].map((item) => (
                 <Link 
                   key={item}
@@ -74,24 +89,24 @@ export default function Navbar() {
           </div>
 
           {/* Right Section */}
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4">
             <motion.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setIsCitySelectorOpen(true)}
-              className="flex items-center gap-1 text-gray-600 hover:text-gray-900 bg-gray-50 px-3 py-1.5 rounded-full"
+              className="flex items-center gap-1 text-gray-600 hover:text-gray-900 bg-gray-50 px-3 py-1 rounded-full text-sm"
             >
-              <MapPin className="w-4 h-4" />
+              <MapPin className="w-3 h-3" />
               <span>{selectedCity}</span>
             </motion.button>
 
             <div className="flex items-center gap-4">
-              <button 
-                onClick={() => setIsSearchOpen(!isSearchOpen)}
+              <Link 
+                href="/search"
                 className="p-2 hover:bg-gray-100 rounded-full transition-colors"
               >
                 <Search className="w-5 h-5 text-gray-600" />
-              </button>
+              </Link>
               <button className="p-2 hover:bg-gray-100 rounded-full transition-colors relative">
                 <Bell className="w-5 h-5 text-gray-600" />
                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
@@ -101,16 +116,32 @@ export default function Navbar() {
             <div className="h-6 w-px bg-gray-200" />
 
             <div className="flex items-center gap-4">
-              <Link 
-                href="/contact" 
-                className="text-gray-600 hover:text-gray-900 relative group py-1"
-              >
-                Contact Us
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
-              </Link>
-              <button className="px-6 py-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 text-white rounded-full transition-all duration-300 shadow-md hover:shadow-lg">
-                Login/Sign Up
-              </button>
+              {user ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full overflow-hidden">
+                    <Image
+                      src={user.photoURL || '/default-avatar.png'}
+                      alt="Profile"
+                      width={32}
+                      height={32}
+                      className="object-cover"
+                    />
+                  </div>
+                  <button
+                    onClick={handleSignOut}
+                    className="text-sm text-gray-600 hover:text-gray-900"
+                  >
+                    Sign out
+                  </button>
+                </div>
+              ) : (
+                <button 
+                  onClick={() => setIsLoginModalOpen(true)} 
+                  className="px-5 py-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 text-white rounded-full transition-all duration-300 shadow-md hover:shadow-lg text-sm"
+                >
+                  Login/Sign Up
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -146,6 +177,11 @@ export default function Navbar() {
         onClose={() => setIsCitySelectorOpen(false)}
         onSelect={setSelectedCity}
         currentCity={selectedCity}
+      />
+
+      <LoginModal 
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
       />
     </motion.nav>
   )
