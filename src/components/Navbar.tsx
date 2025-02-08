@@ -25,14 +25,14 @@ export default function Navbar() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 text-white overflow-hidden"
+            className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white overflow-hidden"
           >
             <div className="max-w-7xl mx-auto py-2 px-4 text-center text-sm">
               <div className="flex items-center justify-center gap-2">
                 <span className="inline-block w-5 h-5 animate-pulse">🎵</span>
-                A milestone moment: Warner Music Group invests in EventGenie! 
+                Launching Soon! Join our waitlist to get early access and exclusive benefits
                 <Link href="#" className="text-red-300 hover:text-red-200 ml-2 relative group">
-                  Know more
+                  Join Now
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-red-300 group-hover:w-full transition-all duration-300" />
                 </Link>
                 <button 
@@ -54,7 +54,7 @@ export default function Navbar() {
           <div className="flex items-center gap-8">
             <Link 
               href="/" 
-              className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text hover:from-blue-700 hover:to-purple-700 transition-all"
+              className="text-2xl font-bold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-transparent bg-clip-text hover:from-indigo-600 hover:to-pink-600 transition-all"
             >
               EventGenie
             </Link>
@@ -70,13 +70,6 @@ export default function Navbar() {
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
                 </Link>
               ))}
-              <div className="h-4 w-px bg-gray-200" />
-              <Link 
-                href="#" 
-                className="flex items-center gap-1 hover:opacity-80 transition-opacity"
-              >
-                <img src="/images/jack-daniels.png" alt="Jack Daniel's" className="h-6" />
-              </Link>
             </div>
           </div>
 
@@ -109,13 +102,13 @@ export default function Navbar() {
 
             <div className="flex items-center gap-4">
               <Link 
-                href="/create" 
+                href="/contact" 
                 className="text-gray-600 hover:text-gray-900 relative group py-1"
               >
-                Create Listing
+                Contact Us
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
               </Link>
-              <button className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-full transition-all duration-300 shadow-md hover:shadow-lg">
+              <button className="px-6 py-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 text-white rounded-full transition-all duration-300 shadow-md hover:shadow-lg">
                 Login/Sign Up
               </button>
             </div>

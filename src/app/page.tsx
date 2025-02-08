@@ -22,12 +22,10 @@ export default function Home() {
     <main className="min-h-screen bg-white overflow-hidden">
       {/* Hero Section */}
       <section className="relative min-h-screen bg-gradient-to-b from-gray-50 to-white">
-        {/* Background Effects */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute w-full h-1/2 bg-gradient-to-b from-blue-50/50 to-transparent" />
-          <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.03]" />
-          <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-100/40 via-purple-100/40 to-transparent blur-3xl" />
-          <div className="absolute -bottom-40 -left-40 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-pink-100/40 via-purple-100/40 to-transparent blur-3xl" />
+        {/* Enhanced Background Effects */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl animate-pulse delay-1000" />
         </div>
 
         {/* Content */}
@@ -59,46 +57,46 @@ export default function Home() {
 
               <div className="space-y-4">
                 <motion.h1 
-                  className="text-6xl lg:text-7xl font-bold"
+                  className="text-6xl md:text-7xl font-bold text-center mb-6"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
                 >
-                  Find & Book the
-                  <div className="relative mt-2">
-                    <span className="relative z-10 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-transparent bg-clip-text">
-                      Perfect Artist
-                    </span>
-                    <motion.div 
-                      className="absolute -bottom-2 left-0 right-0 h-3 bg-blue-100/30 rounded-full"
-                      initial={{ width: 0 }}
-                      animate={{ width: "100%" }}
-                      transition={{ delay: 0.8, duration: 0.6 }}
-                    />
-                  </div>
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+                    Book Amazing Artists
+                  </span>
+                  <br />
+                  <span className="text-gray-800">For Your Events</span>
                 </motion.h1>
               </div>
 
-              {/* Search Section */}
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="text-gray-600 text-xl text-center max-w-3xl mx-auto mb-12"
+              >
+                Discover and book the perfect artists for your events. From live bands to DJs, 
+                we've got the talent you need to make your event unforgettable.
+              </motion.p>
+
+              {/* Enhanced Search Bar */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="relative max-w-xl"
+                transition={{ delay: 0.3 }}
+                className="max-w-2xl mx-auto mb-20"
               >
-                <div className="relative group">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl opacity-30 blur group-hover:opacity-50 transition duration-300" />
-                  <div className="relative flex items-center bg-white rounded-2xl shadow-lg p-2">
-                    <Search className="w-6 h-6 text-gray-400 ml-4" />
-                    <input
-                      type="text"
-                      placeholder="Search artists or events..."
-                      className="w-full px-4 py-3 text-gray-700 placeholder-gray-400 bg-transparent focus:outline-none"
-                    />
-                    <button className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5">
-                      Search
-                    </button>
-                  </div>
+                <div className="relative">
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    placeholder="Search for artists, bands, or venues..."
+                    className="w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-transparent transition-all duration-300 text-gray-700 placeholder-gray-400"
+                  />
+                  <button className="absolute right-2 top-1/2 transform -translate-y-1/2 px-6 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-full hover:shadow-lg hover:shadow-indigo-500/25 transition-all duration-300">
+                    Search
+                  </button>
                 </div>
               </motion.div>
 
@@ -159,18 +157,21 @@ export default function Home() {
                       ease: [0.32, 0.72, 0, 1]
                     }}
                     className={`absolute top-0 left-0 right-0 h-[500px] rounded-3xl overflow-hidden shadow-2xl
-                      ${position === 0 ? 'shadow-blue-500/20 hover:shadow-blue-500/30' : ''}`}
+                      ${position === 0 ? 'shadow-indigo-500/20 hover:shadow-indigo-500/30' : ''}`}
                     style={{ 
                       transformOrigin: 'center bottom',
                       background: 'linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0.95))',
                     }}
                   >
                     <Image
-                      src={`/images/events/event-${i}.jpeg`}
+                      src={`/images/events/event-${i}.webp`}
                       alt={`Event ${i}`}
                       fill
                       className="object-cover opacity-70 hover:opacity-100 transition-opacity duration-300"
                       priority={i === 1}
+                      onError={(e) => {
+                        console.error(`Error loading image event-${i}.webp:`, e);
+                      }}
                     />
                     
                     {/* Content overlay with improved styling */}
@@ -214,11 +215,123 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Artists Section */}
+      {/* Trending Artists */}
       <section className="py-20 relative">
-        {/* Dynamic Background */}
         <div className="absolute inset-0 bg-[#0A0A0A]">
-          <div className="absolute inset-0 bg-gradient-to-t from-blue-900/20 via-purple-900/10 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-indigo-900/20 via-purple-900/10 to-transparent" />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 relative">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl font-bold mb-4 text-white">
+              Featured Artists
+            </h2>
+            <p className="text-gray-400 max-w-2xl mx-auto">
+              Discover exceptional talent for your next event
+            </p>
+          </motion.div>
+
+          {/* Scrolling Artists Container */}
+          <div className="relative">
+            {/* Gradient Overlays */}
+            <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-[#0A0A0A] to-transparent z-10" />
+            <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-[#0A0A0A] to-transparent z-10" />
+
+            {/* Scrolling Container */}
+            <div className="flex overflow-x-hidden relative">
+              <motion.div
+                className="flex gap-6 py-4"
+                animate={{
+                  x: ["0%", "-50%"],
+                }}
+                transition={{
+                  x: {
+                    repeat: Infinity,
+                    repeatType: "loop",
+                    duration: 30,
+                    ease: "linear",
+                  },
+                }}
+              >
+                {[...Array(8)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="flex-shrink-0 w-[300px] group"
+                    whileHover={{ y: -10 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <div className="bg-gray-900 rounded-3xl overflow-hidden border border-gray-800">
+                      <div className="relative h-48">
+                        <Image
+                          src={`/images/events/event-${(i % 3) + 1}.webp`}
+                          alt={`Artist ${i + 1}`}
+                          fill
+                          className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-300"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent" />
+                        <div className="absolute bottom-4 left-4 right-4">
+                          <div className="flex items-center justify-between text-white">
+                            <span className="font-medium">₹{(i + 1) * 10000}/night</span>
+                            <div className="flex items-center gap-1">
+                              <Star className="w-4 h-4 fill-yellow-500 stroke-yellow-500" />
+                              <span>{4.5 + (i % 5) / 10}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="p-6">
+                        <div className="text-sm text-indigo-400 mb-2">
+                          {["Rock Band", "Classical", "DJ", "Jazz", "Pop", "Folk", "Fusion", "Blues"][i]}
+                        </div>
+                        <h3 className="text-xl font-semibold mb-2 text-white group-hover:text-indigo-300 transition-colors">
+                          {["The Vibes", "Rhythm Express", "DJ Nova", "Jazz Quartet", "Echo Band", "Folk Tales", "Fusion Flow", "Blues Bros"][i]}
+                        </h3>
+                        <div className="flex items-center gap-2 text-gray-400 text-sm mb-4">
+                          <MapPin className="w-4 h-4" />
+                          {["Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai", "Kolkata", "Pune", "Jaipur"][i]}
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {["Live", "Trending", "Featured"][i % 3].split(" ").map((tag, index) => (
+                            <span
+                              key={index}
+                              className="px-3 py-1 bg-indigo-500/10 text-indigo-400 rounded-full text-xs border border-indigo-500/20"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </div>
+          </div>
+
+          {/* Action Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mt-12"
+          >
+            <button className="px-8 py-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white rounded-full hover:shadow-lg hover:shadow-indigo-500/25 transition-all duration-300">
+              Explore All Artists
+            </button>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* How EventGenie Works */}
+      <section className="py-32 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[#0A0A0A]">
+          <div className="absolute inset-0 bg-gradient-to-b from-indigo-900/20 via-purple-900/10 to-transparent" />
+          {/* Animated particles background */}
           <div className="absolute inset-0 opacity-30">
             {[...Array(50)].map((_, i) => (
               <div
@@ -236,188 +349,107 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4">
-          {/* Header with Animated Line */}
-          <div className="flex flex-col items-center text-center mb-20">
-            <motion.div
-              initial={{ width: 0 }}
-              whileInView={{ width: "100px" }}
-              viewport={{ once: true }}
-              className="h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent mb-8"
-            />
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-5xl font-bold text-white mb-4"
-            >
-              Featured Artists
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="text-gray-400 max-w-2xl"
-            >
-              Discover and book exceptional talent for your next event
-            </motion.p>
-          </div>
+        <div className="max-w-7xl mx-auto px-4 relative">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-20"
+          >
+            <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 text-transparent bg-clip-text">
+              How EventGenie Works
+            </h2>
+            <p className="text-gray-400 max-w-2xl mx-auto text-lg">
+              Your journey from booking to performance, simplified
+            </p>
+          </motion.div>
 
-          {/* Artists Grid with Hover Effects */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
-                name: "The F16s",
-                image: "/images/events/event-1.jpeg",
-                genre: "Rock Band",
-                location: "BENGALURU",
-                rating: 4.9,
-                priceRange: "$500-1000",
-                endorsedBy: "Jack Daniel's",
-                bookings: "50+ shows",
-                color: "from-blue-500/20"
+                icon: "🎯",
+                title: "Discover Artists & Venues",
+                description: "Browse through our curated selection of top artists and premium venues across India",
+                features: ["Verified profiles", "Real reviews", "Portfolio showcase"],
+                color: "from-indigo-500/20"
               },
               {
-                name: "DJ Shadow",
-                image: "/images/events/event-2.jpeg",
-                genre: "Electronic",
-                location: "Mumbai",
-                rating: 4.8,
-                priceRange: "$300-800",
-                endorsedBy: "Red Bull",
-                bookings: "100+ shows",
+                icon: "🤝",
+                title: "Book with Confidence",
+                description: "Secure your bookings with our transparent and hassle-free process",
+                features: ["Instant booking", "Secure payments", "Clear pricing"],
                 color: "from-purple-500/20"
               },
               {
-                name: "Jazz Quartet",
-                image: "/images/events/event-3.jpeg",
-                genre: "Jazz",
-                location: "Delhi",
-                rating: 4.9,
-                priceRange: "$600-1200",
-                endorsedBy: "Yamaha",
-                bookings: "30+ shows",
+                icon: "✨",
+                title: "Create Memories",
+                description: "Experience seamless events with our end-to-end support",
+                features: ["Event support", "Quality guarantee", "Memorable experiences"],
                 color: "from-pink-500/20"
               }
-            ].map((artist, i) => (
+            ].map((step, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.2 }}
-                className="group relative"
+                transition={{ delay: i * 0.2 }}
+                className="relative group"
               >
-                {/* Card with Hover Effects */}
-                <motion.div
-                  whileHover={{ y: -10 }}
-                  className="relative rounded-3xl overflow-hidden"
-                >
-                  {/* Animated Background */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-black">
-                    <div className={`absolute inset-0 bg-gradient-to-b ${artist.color} to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500`} />
-                    <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.03]" />
-                  </div>
-
-                  {/* Artist Image Container */}
-                  <div className="relative h-[300px] overflow-hidden">
-                    <Image
-                      src={artist.image}
-                      alt={artist.name}
-                      fill
-                      className="object-cover transform group-hover:scale-110 transition-all duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
-
-                    {/* Animated Endorsement Badge */}
-                    <motion.div
-                      initial={{ opacity: 0, x: 50 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      className="absolute top-4 right-4 group-hover:-translate-y-1 transition-transform duration-300"
-                    >
-                      <div className="relative">
-                        <div className="absolute inset-0 bg-blue-500/20 blur-md rounded-full" />
-                        <div className="relative px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white text-sm rounded-full shadow-lg backdrop-blur-sm">
-                          Endorsed by {artist.endorsedBy}
-                        </div>
-                      </div>
-                    </motion.div>
-
-                    {/* Hover Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  </div>
-
-                  {/* Content with Animated Elements */}
-                  <div className="relative p-6 space-y-4">
-                    <div className="flex items-center justify-between">
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        className="px-3 py-1 bg-white/10 rounded-full backdrop-blur-sm"
-                      >
-                        <span className="text-white/90 text-sm">{artist.genre}</span>
-                      </motion.div>
-                      <div className="flex items-center gap-1">
-                        <div className="flex -space-x-1">
-                          {[...Array(5)].map((_, i) => (
-                            <div
-                              key={i}
-                              className="w-6 h-6 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-500 flex items-center justify-center shadow-lg"
-                            >
-                              <Star className="w-3 h-3 text-white" />
-                            </div>
-                          ))}
-                        </div>
-                        <span className="text-white font-medium ml-2">{artist.rating}</span>
-                      </div>
-                    </div>
-
-                    <h3 className="text-2xl font-bold text-white group-hover:text-blue-400 transition-colors">
-                      {artist.name}
+                <div className="absolute inset-0 bg-gradient-to-b from-gray-800 to-gray-900 rounded-2xl transform group-hover:-translate-y-2 transition-transform duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-b from-gray-800 to-gray-900 rounded-2xl transform group-hover:translate-y-2 transition-transform duration-300 opacity-50" />
+                <div className={`relative bg-gradient-to-b from-gray-800 to-gray-900 p-8 rounded-2xl overflow-hidden group-hover:shadow-2xl transition-all duration-300`}>
+                  {/* Gradient overlay */}
+                  <div className={`absolute inset-0 bg-gradient-to-b ${step.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                  
+                  {/* Content */}
+                  <div className="relative z-10">
+                    <div className="text-5xl mb-6">{step.icon}</div>
+                    <h3 className="text-2xl font-bold mb-4 text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-indigo-400 group-hover:to-purple-400 transition-all duration-300">
+                      {step.title}
                     </h3>
-
-                    <div className="flex items-center gap-4 text-gray-400">
-                      <div className="flex items-center gap-2">
-                        <div className="p-2 rounded-full bg-white/5">
-                          <MapPin className="w-4 h-4" />
-                        </div>
-                        <span className="text-sm">{artist.location}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="p-2 rounded-full bg-white/5">
-                          <Calendar className="w-4 h-4" />
-                        </div>
-                        <span className="text-sm">{artist.bookings}</span>
-                      </div>
-                    </div>
-
-                    {/* Price and CTA */}
-                    <motion.div 
-                      className="flex items-center justify-between pt-4 border-t border-white/10"
-                    >
-                      <div className="group-hover:translate-y-0 transition-transform duration-300">
-                        <div className="text-white font-medium">
-                          {artist.priceRange}
-                        </div>
-                        <div className="text-gray-400 text-sm">per event</div>
-                      </div>
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full shadow-lg hover:shadow-blue-500/25 transition-all duration-300"
-                      >
-                        Book Now
-                      </motion.button>
-                    </motion.div>
+                    <p className="text-gray-400 mb-6 group-hover:text-gray-300 transition-colors duration-300">
+                      {step.description}
+                    </p>
+                    <ul className="space-y-3">
+                      {step.features.map((feature, index) => (
+                        <li key={index} className="flex items-center text-gray-400 group-hover:text-gray-300">
+                          <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-2" />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                </motion.div>
+                </div>
               </motion.div>
             ))}
           </div>
+
+          {/* Action buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.6 }}
+            className="flex justify-center gap-4 mt-16"
+          >
+            <button className="px-8 py-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white rounded-full text-lg font-medium hover:shadow-lg hover:shadow-indigo-500/25 transition-all duration-300 hover:-translate-y-0.5">
+              Get Started
+            </button>
+            <button className="px-8 py-3 bg-white/10 text-white rounded-full text-lg font-medium hover:bg-white/20 transition-all duration-300 hover:-translate-y-0.5">
+              Learn More
+            </button>
+          </motion.div>
         </div>
       </section>
 
       {/* Add a subtle footer gradient */}
-      <div className="h-32 bg-gradient-to-t from-blue-900/20 to-transparent" />
+      <div className="h-32 bg-gradient-to-t from-blue-900/20 to-transparent relative">
+        {/* Copyright Text */}
+        <div className="absolute bottom-4 left-0 right-0 text-center text-gray-400 text-sm">
+          © {new Date().getFullYear()} EventGenie. All rights reserved.
+        </div>
+      </div>
     </main>
   )
 }

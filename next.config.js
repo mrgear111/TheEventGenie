@@ -1,7 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    // Remove domains if not using external images
+    domains: [], // Add your domains here if using external images
+    formats: ['image/webp'],
+    remotePatterns: [],
   },
 }
 

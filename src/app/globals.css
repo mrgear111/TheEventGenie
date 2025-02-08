@@ -5,10 +5,10 @@
 :root {
   --background: #ffffff;
   --foreground: #111111;
-  --primary: #2563eb;
-  --primary-light: #3b82f6;
-  --secondary: #6366f1;
-  --accent: #f0f9ff;
+  --primary: #4f46e5;  /* indigo-600 */
+  --primary-light: #6366f1;  /* indigo-500 */
+  --secondary: #a855f7;  /* purple-500 */
+  --accent: #ec4899;  /* pink-500 */
   --muted: #94a3b8;
 }
 
@@ -21,10 +21,39 @@ body {
   box-shadow: var(--accent-glow);
 }
 
+.gradient-primary {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+}
+
+.gradient-secondary {
+  background: linear-gradient(135deg, var(--secondary), var(--accent));
+}
+
 .gradient-text {
-  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.hover-gradient {
+  position: relative;
+  overflow: hidden;
+}
+
+.hover-gradient::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.hover-gradient:hover::before {
+  opacity: 0.1;
 }
 
 .glass-card {
@@ -43,6 +72,9 @@ body {
 
 .floating {
   animation: float 3s ease-in-out infinite;
+  background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 @keyframes float {
@@ -73,4 +105,47 @@ body {
 @keyframes twinkle {
   0%, 100% { opacity: 0; }
   50% { opacity: 1; }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--primary) 0%,
+    var(--secondary) 25%,
+    var(--accent) 50%,
+    var(--secondary) 75%,
+    var(--primary) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 6s linear infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.8; }
+}
+
+.animate-pulse {
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.delay-1000 {
+  animation-delay: 1000ms;
+}
+
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
 } 
