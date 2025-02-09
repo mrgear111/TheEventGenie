@@ -42,14 +42,14 @@ export default function Contact() {
           />
           
           <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-transparent bg-clip-text leading-tight">
-            Let's Create Something
+            Let&apos;s Create Something
             <br />
             Amazing Together
           </h1>
 
           <p className="text-lg text-gray-200 max-w-2xl mx-auto leading-relaxed">
-            Whether you're an artist looking to perform, a venue seeking talent, or just
-            excited about what we're building - we'd love to hear from you!
+            Whether you&apos;re an artist looking to perform, a venue seeking talent, or just
+            excited about what we&apos;re building - we&apos;d love to hear from you!
           </p>
         </motion.div>
 
@@ -65,7 +65,7 @@ export default function Contact() {
                 Send us a message
               </h2>
               <p className="text-gray-400">
-                We're currently in beta, building something special. Your feedback helps shape our platform!
+                We&apos;re currently in beta, building something special. Your feedback helps shape our platform!
               </p>
             </div>
             <form className="space-y-6">
@@ -172,7 +172,7 @@ export default function Contact() {
             >
               <h3 className="font-semibold mb-2 text-white">Join Our Team! 🚀</h3>
               <p className="text-gray-400 text-sm mb-4">
-                We're looking for passionate individuals to help revolutionize the artist booking industry.
+                We&apos;re looking for passionate individuals to help revolutionize the artist booking industry.
               </p>
               <Link 
                 href="/careers" 

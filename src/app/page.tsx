@@ -78,7 +78,7 @@ export default function Home() {
                 className="text-gray-600 text-xl text-center max-w-3xl mx-auto mb-12"
               >
                 Discover and book the perfect artists for your events. From live bands to DJs, 
-                we've got the talent you need to make your event unforgettable.
+                we&apos;ve got the talent you need to make your event unforgettable.
               </motion.p>
 
               {/* Enhanced Search Bar */}

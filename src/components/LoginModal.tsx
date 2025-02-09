@@ -15,11 +15,9 @@ interface LoginModalProps {
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const [error, setError] = useState<string | null>(null)
   const [isArtist, setIsArtist] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
 
   const handleGoogleSignIn = async () => {
     try {
-      setIsLoading(true)
       setError(null)
       
       const result = await signInWithPopup(auth, googleProvider)
@@ -34,8 +32,6 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
     } catch (error: any) {
       console.error('Error signing in with Google:', error)
       setError(error.message)
-    } finally {
-      setIsLoading(false)
     }
   }
 

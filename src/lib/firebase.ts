@@ -19,7 +19,15 @@ export const database = getDatabase(app);
 export const googleProvider = new GoogleAuthProvider();
 
 // Initialize user in database after login
-export const initializeUserInDatabase = async (user: any, isArtist: boolean = false) => {
+export const initializeUserInDatabase = async (
+  user: {
+    email: string;
+    uid: string;
+    displayName: string | null;
+    photoURL: string | null;
+  },
+  isArtist: boolean = false
+) => {
   if (!user) return;
   
   try {

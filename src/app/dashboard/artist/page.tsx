@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 import { database } from '../../../lib/firebase'
 import { ref, get, set } from 'firebase/database'
 import Image from 'next/image'
-import { Calendar, Users, Eye, Star, Music, Settings, Clock, Camera, Edit, X, Badge, Instagram, Twitter, Facebook, Youtube } from 'lucide-react'
+import { Calendar, Users, Star, Music, Clock, Camera, Edit, X, Instagram, Twitter, Facebook, Youtube } from 'lucide-react'
 
 interface ArtistData {
   approvalStatus: boolean
