@@ -8,6 +8,7 @@ import { database } from '../../../lib/firebase'
 import { ref, get, set } from 'firebase/database'
 import Image from 'next/image'
 import { Calendar, Users, Star, Music, Clock, Camera, Edit, X, Instagram, Twitter, Facebook, Youtube } from 'lucide-react'
+import ScheduleModal from '../../../components/ScheduleModal'
 
 interface ArtistData {
   approvalStatus: boolean
@@ -189,6 +190,7 @@ function ArtistDashboard() {
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [updating, setUpdating] = useState(false)
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
+  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false)
 
   useEffect(() => {
     if (!user?.email) {
@@ -233,57 +235,90 @@ function ArtistDashboard() {
     if (!user?.email) return;
     
     try {
-      setUpdating(true)
-      const safeKey = user.email.replace(/[.#$[\]]/g, '_').replace('@', 'AT')
-      const artistRef = ref(database, `Artists/${safeKey}`)
+      setUpdating(true);
+      const safeKey = user.email.replace(/[.#$[\]]/g, '_').replace('@', 'AT');
+      const artistRef = ref(database, `Artists/${safeKey}`);
       
       // Keep existing data that shouldn't be modified
       const updatedData = {
         ...artistData,
         details: {
           ...artistData?.details,
-          // Update all editable fields
-          artForm: editedData.artForm || artistData?.details.artForm,
-          description: editedData.description || artistData?.details.description,
-          facebookLink: editedData.facebookLink || artistData?.details.facebookLink,
-          fullName: editedData.fullName || artistData?.details.fullName,
-          instagramLink: editedData.instagramLink || artistData?.details.instagramLink,
-          isProfileVisible: editedData.isProfileVisible ?? artistData?.details.isProfileVisible,
-          pricing45: editedData.pricing45 || artistData?.details.pricing45,
-          pricing60: editedData.pricing60 || artistData?.details.pricing60,
-          pricing90: editedData.pricing90 || artistData?.details.pricing90,
-          stageName: editedData.stageName || artistData?.details.stageName,
-          twitterLink: editedData.twitterLink || artistData?.details.twitterLink,
-          youtubeLink: editedData.youtubeLink || artistData?.details.youtubeLink,
+          ...editedData, // Spread editedData to update all changed fields
           email: user.email // Keep email in sync
         },
-        // Keep these fields unchanged
-        approvalStatus: artistData?.approvalStatus,
-        bookingCount: artistData?.bookingCount,
-        busyDays: artistData?.busyDays || {},
         email: user.email,
-        photoUrl: artistData?.photoUrl,
-        profileViews: artistData?.profileViews
-      }
+      };
 
       // Update in database
-      await set(artistRef, updatedData)
+      await set(artistRef, updatedData);
 
       // Refresh the data
-      const snapshot = await get(artistRef)
+      const snapshot = await get(artistRef);
       if (snapshot.exists()) {
-        setArtistData(snapshot.val())
+        setArtistData(snapshot.val());
       }
       
-      setIsEditing(false)
-      setEditedData({})
+      setIsEditing(false);
+      setEditedData({}); // Clear edited data after successful update
     } catch (error) {
-      console.error('Error updating profile:', error)
-      // You might want to show an error message to the user here
+      console.error('Error updating profile:', error);
     } finally {
-      setUpdating(false)
+      setUpdating(false);
     }
-  }
+  };
+
+  const handleBlockDate = async (date: string, reason: string) => {
+    if (!user?.email) return;
+    
+    try {
+      const safeKey = user.email.replace(/[.#$[\]]/g, '_').replace('@', 'AT');
+      const artistRef = ref(database, `Artists/${safeKey}`);
+      
+      const updatedBusyDays = {
+        ...artistData?.busyDays,
+        [date]: reason
+      };
+      
+      await set(artistRef, {
+        ...artistData,
+        busyDays: updatedBusyDays
+      });
+      
+      // Refresh artist data
+      const snapshot = await get(artistRef);
+      if (snapshot.exists()) {
+        setArtistData(snapshot.val());
+      }
+    } catch (error) {
+      console.error('Error blocking date:', error);
+    }
+  };
+
+  const handleUnblockDate = async (date: string) => {
+    if (!user?.email) return;
+    
+    try {
+      const safeKey = user.email.replace(/[.#$[\]]/g, '_').replace('@', 'AT');
+      const artistRef = ref(database, `Artists/${safeKey}`);
+      
+      const updatedBusyDays = { ...artistData?.busyDays };
+      delete updatedBusyDays[date];
+      
+      await set(artistRef, {
+        ...artistData,
+        busyDays: updatedBusyDays
+      });
+      
+      // Refresh artist data
+      const snapshot = await get(artistRef);
+      if (snapshot.exists()) {
+        setArtistData(snapshot.val());
+      }
+    } catch (error) {
+      console.error('Error unblocking date:', error);
+    }
+  };
 
   if (loading) {
     return (
@@ -369,20 +404,27 @@ function ArtistDashboard() {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => setIsEditing(!isEditing)}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg hover:shadow-md transition-all duration-300"
+              onClick={() => {
+                // Reset editedData to current values when starting to edit
+                setEditedData({
+                  stageName: artistData?.details.stageName || '',
+                  artForm: artistData?.details.artForm || '',
+                  description: artistData?.details.description || '',
+                  pricing45: artistData?.details.pricing45 || '',
+                  pricing60: artistData?.details.pricing60 || '',
+                  pricing90: artistData?.details.pricing90 || '',
+                  facebookLink: artistData?.details.facebookLink || '',
+                  instagramLink: artistData?.details.instagramLink || '',
+                  twitterLink: artistData?.details.twitterLink || '',
+                  youtubeLink: artistData?.details.youtubeLink || '',
+                  isProfileVisible: artistData?.details.isProfileVisible || false,
+                });
+                setIsEditing(true);
+              }}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg hover:shadow-lg transition-all duration-300"
             >
-              {isEditing ? (
-                <>
-                  <X className="w-4 h-4" />
-                  Cancel Editing
-                </>
-              ) : (
-                <>
-                  <Edit className="w-4 h-4" />
-                  Edit Profile
-                </>
-              )}
+              <Edit className="w-4 h-4" />
+              Edit Profile
             </motion.button>
           </div>
         </motion.div>
@@ -613,7 +655,10 @@ function ArtistDashboard() {
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      onClick={() => setIsEditing(false)}
+                      onClick={() => {
+                        setIsEditing(false);
+                        setEditedData({}); // Clear edited data when canceling
+                      }}
                       className="px-6 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-all duration-300"
                     >
                       Cancel
@@ -667,7 +712,73 @@ function ArtistDashboard() {
               className="bg-white/80 backdrop-blur-xl rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-500 border border-white"
             >
               <h2 className="text-lg font-semibold text-gray-900 mb-6">Social Media</h2>
-              {/* Add social media form/display here */}
+              <div className="flex flex-wrap gap-4">
+                {/* Instagram */}
+                {artistData?.details.instagramLink && (
+                  <motion.a
+                    href={artistData.details.instagramLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="p-3 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg text-white hover:shadow-lg transition-all duration-300"
+                  >
+                    <Instagram className="w-6 h-6" />
+                  </motion.a>
+                )}
+
+                {/* Facebook */}
+                {artistData?.details.facebookLink && (
+                  <motion.a
+                    href={artistData.details.facebookLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="p-3 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg text-white hover:shadow-lg transition-all duration-300"
+                  >
+                    <Facebook className="w-6 h-6" />
+                  </motion.a>
+                )}
+
+                {/* Twitter */}
+                {artistData?.details.twitterLink && (
+                  <motion.a
+                    href={artistData.details.twitterLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="p-3 bg-gradient-to-br from-blue-400 to-blue-500 rounded-lg text-white hover:shadow-lg transition-all duration-300"
+                  >
+                    <Twitter className="w-6 h-6" />
+                  </motion.a>
+                )}
+
+                {/* YouTube */}
+                {artistData?.details.youtubeLink && (
+                  <motion.a
+                    href={artistData.details.youtubeLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="p-3 bg-gradient-to-br from-red-500 to-red-600 rounded-lg text-white hover:shadow-lg transition-all duration-300"
+                  >
+                    <Youtube className="w-6 h-6" />
+                  </motion.a>
+                )}
+
+                {/* Show message if no social media links */}
+                {!artistData?.details.instagramLink && 
+                 !artistData?.details.facebookLink && 
+                 !artistData?.details.twitterLink && 
+                 !artistData?.details.youtubeLink && (
+                  <p className="text-gray-500 text-sm italic">
+                    No social media links added yet. Edit your profile to add them.
+                  </p>
+                )}
+              </div>
             </motion.div>
           </div>
 
@@ -684,25 +795,29 @@ function ArtistDashboard() {
                     label: 'Update Portfolio', 
                     icon: Music, 
                     gradient: 'from-purple-500 to-pink-500',
-                    hoverGradient: 'hover:from-purple-600 hover:to-pink-600'
+                    hoverGradient: 'hover:from-purple-600 hover:to-pink-600',
+                    onClick: () => {}
                   },
                   { 
                     label: 'Manage Schedule', 
                     icon: Calendar, 
                     gradient: 'from-blue-500 to-cyan-500',
-                    hoverGradient: 'hover:from-blue-600 hover:to-cyan-600'
+                    hoverGradient: 'hover:from-blue-600 hover:to-cyan-600',
+                    onClick: () => setIsScheduleModalOpen(true)
                   },
                   { 
                     label: 'View Requests', 
                     icon: Users, 
                     gradient: 'from-green-500 to-emerald-500',
-                    hoverGradient: 'hover:from-green-600 hover:to-emerald-600'
+                    hoverGradient: 'hover:from-green-600 hover:to-emerald-600',
+                    onClick: () => {}
                   }
                 ].map((action, index) => (
                   <motion.button
                     key={action.label}
                     whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.98 }}
+                    onClick={action.onClick}
                     className={`w-full flex items-center gap-3 px-4 py-3 text-white bg-gradient-to-r ${action.gradient} ${action.hoverGradient} rounded-lg transition-all duration-300 hover:shadow-lg shadow-md`}
                   >
                     <action.icon className="w-5 h-5" />
@@ -713,6 +828,15 @@ function ArtistDashboard() {
             </motion.div>
           </div>
         </motion.div>
+
+        {/* Add the Schedule Modal */}
+        <ScheduleModal
+          isOpen={isScheduleModalOpen}
+          onClose={() => setIsScheduleModalOpen(false)}
+          busyDays={artistData?.busyDays || {}}
+          onBlockDate={handleBlockDate}
+          onUnblockDate={handleUnblockDate}
+        />
       </div>
     </div>
   )
