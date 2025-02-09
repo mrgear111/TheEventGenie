@@ -198,12 +198,19 @@ function ArtistDashboard() {
 
     const fetchArtistData = async () => {
       try {
-        const safeKey = user.email.replace(/[.#$[\]]/g, '_').replace('@', 'AT')
-        const artistRef = ref(database, `Artists/${safeKey}`)
-        const snapshot = await get(artistRef)
+        if (!user?.email) {
+          console.error('No user email found');
+          return;
+        }
+
+        const safeKey = user.email.replace(/[.#$[\]]/g, '_').replace('@', 'AT');
+        const artistRef = ref(database, `Artists/${safeKey}`);
+        const snapshot = await get(artistRef);
         
         if (snapshot.exists()) {
-          setArtistData(snapshot.val())
+          setArtistData(snapshot.val());
+        } else {
+          console.error('No artist data found');
         }
         setLoading(false)
       } catch (error) {

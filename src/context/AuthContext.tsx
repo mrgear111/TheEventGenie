@@ -6,17 +6,19 @@ import { auth, database } from '../lib/firebase'
 import { ref, get } from 'firebase/database'
 
 interface AuthContextType {
-  user: User | null
-  loading: boolean
-  isArtist: boolean
-  refreshAuthState: () => Promise<void>
+  user: User | null;
+  loading: boolean;
+  isArtist: boolean;
+  signIn: () => Promise<void>;
+  signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
   isArtist: false,
-  refreshAuthState: async () => {}
+  signIn: async () => {},
+  signOut: async () => {}
 })
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -30,12 +32,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const artistRef = ref(database, `Artists/${safeKey}`);
       const snapshot = await get(artistRef);
       
-      setUser(user);
       setIsArtist(snapshot.exists());
+      setUser(user);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching user data:', error);
-      setIsArtist(false);
       setLoading(false);
     }
   }
@@ -48,7 +49,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (!user) {
         setUser(null)
-        setIsArtist(false)
         setLoading(false)
         return
       }
@@ -70,8 +70,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  const signIn = async () => {
+    // Implementation of signIn method
+  }
+
+  const signOut = async () => {
+    // Implementation of signOut method
+  }
+
   return (
-    <AuthContext.Provider value={{ user, loading, isArtist, refreshAuthState }}>
+    <AuthContext.Provider value={{ user, loading, isArtist, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   )

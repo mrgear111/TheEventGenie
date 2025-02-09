@@ -21,14 +21,17 @@ export const googleProvider = new GoogleAuthProvider();
 // Initialize user in database after login
 export const initializeUserInDatabase = async (
   user: {
-    email: string;
+    email: string | null;
     uid: string;
     displayName: string | null;
     photoURL: string | null;
   },
   isArtist: boolean = false
 ) => {
-  if (!user) return;
+  if (!user?.email) {
+    console.error('User email is required');
+    return;
+  }
   
   try {
     const safeKey = user.email

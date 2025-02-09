@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X } from 'lucide-react'
 import { useState } from 'react'
 import { auth, googleProvider, initializeUserInDatabase } from '../lib/firebase'
-import { signInWithPopup } from 'firebase/auth'
+import { signInWithPopup, User } from 'firebase/auth'
 import Image from 'next/image'
 
 interface LoginModalProps {
@@ -22,6 +22,10 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
       
       const result = await signInWithPopup(auth, googleProvider)
       
+      if (!result.user.email) {
+        throw new Error('No email associated with this account');
+      }
+      
       // Initialize user in database and wait for it to complete
       await initializeUserInDatabase(result.user, isArtist)
       
@@ -29,9 +33,9 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
       await new Promise(resolve => setTimeout(resolve, 500))
       
       onClose()
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error signing in with Google:', error)
-      setError(error.message)
+      setError(error instanceof Error ? error.message : 'An error occurred')
     }
   }
 

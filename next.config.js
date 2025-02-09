@@ -11,8 +11,6 @@ const nextConfig = {
     remotePatterns: [],
   },
   pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
-  // Recommended settings for production
-  swcMinify: true,
   reactStrictMode: true,
   poweredByHeader: false,
   eslint: {
