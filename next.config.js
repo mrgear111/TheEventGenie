@@ -1,10 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['images.unsplash.com', 'lh3.googleusercontent.com'],
+    domains: [
+      'images.unsplash.com',
+      'res.cloudinary.com',
+      'lh3.googleusercontent.com', // For Google profile photos
+      'firebasestorage.googleapis.com' // For Firebase Storage
+    ],
     formats: ['image/webp'],
     remotePatterns: [],
   },
+  // Recommended settings for production
+  swcMinify: true,
+  reactStrictMode: true,
+  poweredByHeader: false,
 }
 
 module.exports = nextConfig 
