@@ -105,13 +105,22 @@ export default function Navbar() {
 
               {/* Navigation Links */}
               <div className="hidden md:flex items-center gap-6">
-                <Link href="/feeds" className="text-gray-600 hover:text-gray-900">
+                <Link 
+                  href="/feeds" 
+                  className="text-gray-600 hover:text-gray-900 transition-colors"
+                >
                   Feeds
                 </Link>
-                <Link href="/events" className="text-gray-600 hover:text-gray-900">
+                <Link 
+                  href="/events" 
+                  className="text-gray-600 hover:text-gray-900 transition-colors"
+                >
                   Events
                 </Link>
-                <Link href="/artists" className="text-gray-600 hover:text-gray-900">
+                <Link 
+                  href="/artists" 
+                  className="text-gray-600 hover:text-gray-900 transition-colors"
+                >
                   Artists
                 </Link>
                 <Link href="/contact" className="text-gray-600 hover:text-gray-900 flex items-center gap-1">

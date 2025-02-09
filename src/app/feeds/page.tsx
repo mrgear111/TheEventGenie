@@ -5,8 +5,10 @@ import { motion } from 'framer-motion'
 import { database } from '../../lib/firebase'
 import { ref, get, query, orderByChild, onValue } from 'firebase/database'
 import Image from 'next/image'
-import { Heart, MessageCircle, Share2, Play } from 'lucide-react'
+import { Heart, MessageCircle, Share2, Play, Lock } from 'lucide-react'
 import Link from 'next/link'
+import { useAuth } from '../../context/AuthContext'
+import LoginModal from '../../components/LoginModal'
 
 interface Post {
   id: string
@@ -25,14 +27,20 @@ interface Post {
 }
 
 export default function FeedsPage() {
+  const { user, loading: authLoading } = useAuth()
   const [posts, setPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState(true)
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
 
   useEffect(() => {
+    if (!user) {
+      setLoading(false)
+      return
+    }
+
     const postsRef = ref(database, 'posts')
     const postsQuery = query(postsRef, orderByChild('createdAt'))
 
-    // Set up real-time listener
     const unsubscribe = onValue(postsQuery, async (snapshot) => {
       try {
         if (snapshot.exists()) {
@@ -65,7 +73,6 @@ export default function FeedsPage() {
             })
           )
           
-          // Filter out any null values and reverse to show newest first
           setPosts(postsArray.filter(Boolean).reverse())
         }
         setLoading(false)
@@ -75,15 +82,49 @@ export default function FeedsPage() {
       }
     })
 
-    // Cleanup subscription
     return () => unsubscribe()
-  }, [])
+  }, [user])
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-gray-50 pt-20 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
       </div>
+    )
+  }
+
+  if (!user) {
+    return (
+      <>
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-pink-50 pt-20">
+          <div className="max-w-2xl mx-auto px-4 py-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white rounded-xl shadow-lg p-8 text-center"
+            >
+              <Lock className="w-16 h-16 mx-auto mb-4 text-purple-500" />
+              <h1 className="text-2xl font-bold text-gray-900 mb-4">
+                Login to See Artist Feeds
+              </h1>
+              <p className="text-gray-600 mb-6">
+                Join our community to see what artists are sharing and stay updated with their latest posts.
+              </p>
+              <button
+                onClick={() => setIsLoginModalOpen(true)}
+                className="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:shadow-lg transition-all duration-300"
+              >
+                Login / Sign Up
+              </button>
+            </motion.div>
+          </div>
+        </div>
+
+        <LoginModal 
+          isOpen={isLoginModalOpen} 
+          onClose={() => setIsLoginModalOpen(false)} 
+        />
+      </>
     )
   }
 
