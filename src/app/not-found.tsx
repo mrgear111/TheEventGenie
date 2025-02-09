@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 
@@ -13,7 +15,7 @@ export default function NotFound() {
           <h1 className="text-6xl font-bold text-gray-900">404</h1>
           <h2 className="text-3xl font-semibold text-gray-700">Page Not Found</h2>
           <p className="text-gray-500 max-w-md mx-auto">
-            The page you're looking for doesn't exist or has been moved.
+            The page you&apos;re looking for doesn&apos;t exist or has been moved.
           </p>
           <Link 
             href="/"

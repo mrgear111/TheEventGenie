@@ -10,6 +10,7 @@ const nextConfig = {
     formats: ['image/webp'],
     remotePatterns: [],
   },
+  pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
   // Recommended settings for production
   swcMinify: true,
   reactStrictMode: true,
