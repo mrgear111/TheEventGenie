@@ -40,14 +40,37 @@ export default function CreatePostModal({
     setMediaPreview(previewUrl)
   }
 
+  const uploadToCloudinary = async (file: File) => {
+    const formData = new FormData()
+    formData.append('file', file)
+
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData
+    })
+
+    if (!response.ok) {
+      throw new Error('Upload failed')
+    }
+
+    const data = await response.json()
+    return data.url
+  }
+
   const handleSubmit = async () => {
     if (!content && !mediaFile) return
     
     setLoading(true)
     try {
+      let mediaUrl
+      if (mediaFile) {
+        mediaUrl = await uploadToCloudinary(mediaFile)
+      }
+
       await onCreatePost({
         content,
-        mediaFile: mediaFile
+        mediaUrl,
+        mediaType: mediaFile?.type.split('/')[0] as 'image' | 'video' | 'audio'
       })
       
       // Reset form

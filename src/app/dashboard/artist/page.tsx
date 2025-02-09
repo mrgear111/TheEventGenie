@@ -327,7 +327,6 @@ function ArtistDashboard() {
     content: string
     mediaUrl?: string
     mediaType?: 'image' | 'video' | 'audio'
-    mediaFile?: File | null
   }) => {
     if (!user?.email) return
     
@@ -335,23 +334,12 @@ function ArtistDashboard() {
       const safeKey = user.email.replace(/[.#$[\]]/g, '_').replace('@', 'AT')
       const postRef = ref(database, `posts/${Date.now()}`)
       
-      let mediaUrl = undefined
-      let mediaType = undefined
-
-      // If there's a media file, upload it first
-      if (postData.mediaFile) {
-        const fileRef = storageRef(storage, `posts/${safeKey}/${Date.now()}-${postData.mediaFile.name}`)
-        await uploadBytes(fileRef, postData.mediaFile)
-        mediaUrl = await getDownloadURL(fileRef)
-        mediaType = postData.mediaFile.type.split('/')[0]
-      }
-
       // Create post object with only defined values
       const post = {
         artistId: safeKey,
         content: postData.content,
-        ...(mediaUrl && { mediaUrl }),
-        ...(mediaType && { mediaType }),
+        ...(postData.mediaUrl && { mediaUrl: postData.mediaUrl }),
+        ...(postData.mediaType && { mediaType: postData.mediaType }),
         createdAt: new Date().toISOString(),
         likes: 0,
         comments: 0
@@ -360,7 +348,7 @@ function ArtistDashboard() {
       await set(postRef, post)
     } catch (error) {
       console.error('Error creating post:', error)
-      throw error // Re-throw to handle in the modal
+      throw error
     }
   }
 
