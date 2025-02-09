@@ -146,19 +146,37 @@ const FormField = ({ label, value, onChange, type = "text", placeholder = "", ic
   </div>
 );
 
-const PricingField = ({ label, value, onChange }: { 
-  label: string, 
-  value: string, 
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void 
-}) => (
-  <FormField
-    label={`${label} Minutes Price (₹)`}
-    value={value}
-    onChange={onChange}
-    type="text"
-    placeholder="0"
-    icon={Clock}
-  />
+interface PricingFieldProps {
+  label: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  type?: string;
+  placeholder?: string;
+  icon?: React.ElementType;
+}
+
+const PricingField = ({ label, value, onChange, type = "text", placeholder = "0", icon: Icon }: PricingFieldProps) => (
+  <div className="group">
+    <label className="block text-sm font-medium text-gray-700 mb-2">
+      {`${label} Minutes Price (₹)`}
+    </label>
+    <div className="relative">
+      {Icon && (
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <Icon className="h-5 w-5 text-gray-400" />
+        </div>
+      )}
+      <input
+        type={type}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className={`block w-full rounded-lg border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm transition-all duration-300 ${
+          Icon ? 'pl-10' : 'pl-4'
+        }`}
+      />
+    </div>
+  </div>
 );
 
 function ArtistDashboard() {
