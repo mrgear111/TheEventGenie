@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 import { Search, Calendar, MapPin, ArrowRight, Star, Music } from 'lucide-react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
+import ParticleBackground from '../components/ParticleBackground'
 
 export default function Home() {
   const [activeIndex, setActiveIndex] = useState(0)
@@ -331,22 +332,7 @@ export default function Home() {
       <section className="py-32 relative overflow-hidden">
         <div className="absolute inset-0 bg-[#0A0A0A]">
           <div className="absolute inset-0 bg-gradient-to-b from-indigo-900/20 via-purple-900/10 to-transparent" />
-          {/* Animated particles background */}
-          <div className="absolute inset-0 opacity-30">
-            {[...Array(50)].map((_, i) => (
-              <div
-                key={i}
-                className="absolute rounded-full bg-white"
-                style={{
-                  top: `${Math.random() * 100}%`,
-                  left: `${Math.random() * 100}%`,
-                  width: `${Math.random() * 2}px`,
-                  height: `${Math.random() * 2}px`,
-                  animation: `twinkle ${Math.random() * 5 + 3}s infinite ${Math.random() * 5}s`
-                }}
-              />
-            ))}
-          </div>
+          <ParticleBackground />
         </div>
 
         <div className="max-w-7xl mx-auto px-4 relative">

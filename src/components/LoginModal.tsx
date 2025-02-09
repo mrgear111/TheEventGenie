@@ -15,20 +15,27 @@ interface LoginModalProps {
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const [error, setError] = useState<string | null>(null)
   const [isArtist, setIsArtist] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleGoogleSignIn = async () => {
     try {
-      const result = await signInWithPopup(auth, googleProvider)
-      console.log('Signing in as:', isArtist ? 'Artist' : 'User'); // Debug log
-      console.log('User email:', result.user.email);
+      setIsLoading(true)
+      setError(null)
       
-      // Initialize user in database with artist flag
+      const result = await signInWithPopup(auth, googleProvider)
+      
+      // Initialize user in database and wait for it to complete
       await initializeUserInDatabase(result.user, isArtist)
+      
+      // Small delay to ensure database writes are complete
+      await new Promise(resolve => setTimeout(resolve, 500))
       
       onClose()
     } catch (error: any) {
       console.error('Error signing in with Google:', error)
       setError(error.message)
+    } finally {
+      setIsLoading(false)
     }
   }
 

@@ -23,49 +23,51 @@ export const initializeUserInDatabase = async (user: any, isArtist: boolean = fa
   if (!user) return;
   
   try {
-    // If artist, store in Artists collection
+    const safeKey = user.email
+      .replace(/[.#$[\]]/g, '_')
+      .replace('@', 'AT');
+    
     if (isArtist) {
-      // Create a safe key by removing invalid characters
-      const safeKey = user.email
-        .replace(/[.#$[\]]/g, '_') // Replace invalid characters with underscore
-        .replace('@', 'AT'); // Replace @ with AT
-      
-      console.log('Creating artist with key:', safeKey);
-      
-      // Create reference to existing artist to check if it exists
+      // If artist, only store in Artists collection
       const artistRef = ref(database, `Artists/${safeKey}`);
       
-      // Always update/create the artist entry
-      await set(artistRef, {
-        approvalStatus: true,
-        bookingCount: 0,
-        busyDays: {},
-        details: {
-          email: user.email
-        },
+      // Check if artist data already exists
+      const snapshot = await get(artistRef);
+      
+      if (!snapshot.exists()) {
+        await set(artistRef, {
+          userId: user.uid,
+          approvalStatus: true,
+          bookingCount: 0,
+          busyDays: {},
+          details: {
+            email: user.email,
+            displayName: user.displayName
+          },
+          email: user.email,
+          photoUrl: user.photoURL || '',
+          posts: {},
+          profileViews: 0,
+          createdAt: new Date().toISOString()
+        });
+      }
+    } else {
+      // If regular user, store in users collection
+      const userRef = ref(database, `users/${user.uid}`);
+      await set(userRef, {
         email: user.email,
-        photoUrl: user.photoURL || '',
-        posts: {},
-        profileViews: 0
+        displayName: user.displayName,
+        photoURL: user.photoURL || '',
+        lastLogin: new Date().toISOString(),
+        role: 'user'
       });
-      console.log('Artist profile created/updated:', user.email);
     }
     
-    // Store in users collection
-    const userRef = ref(database, `users/${user.uid}`);
-    await set(userRef, {
-      email: user.email,
-      displayName: user.displayName,
-      photoURL: user.photoURL || '',
-      lastLogin: new Date().toISOString(),
-      isArtist: isArtist
-    });
-    console.log("User data saved:", user.email);
+    await new Promise(resolve => setTimeout(resolve, 300));
+    
   } catch (error) {
     console.error("Error in database operation:", error);
-    if (error instanceof Error) {
-      console.error('Error details:', error.message);
-    }
+    throw error;
   }
 };
 
