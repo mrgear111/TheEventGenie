@@ -44,7 +44,7 @@ export default function Home() {
                 className="inline-flex items-center"
               >
                 <span className="relative inline-block px-6 py-2 rounded-full border border-blue-100 bg-blue-50/50 text-blue-600 text-sm font-medium">
-                  <span className="relative z-10">#1 Artist Booking Platform</span>
+                  <span className="relative z-10">#1 Artist Platform</span>
                   <motion.span 
                     className="absolute inset-0 rounded-full bg-blue-100/50"
                     initial={{ scale: 0.8, opacity: 0 }}
