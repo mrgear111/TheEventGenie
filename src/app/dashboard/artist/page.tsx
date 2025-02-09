@@ -427,7 +427,7 @@ function ArtistDashboard() {
                 <h3 className="text-sm font-medium text-gray-500">Today's Motivation</h3>
                 <p className="mt-1 text-lg font-semibold text-gray-900">
                   {artistData?.bookingCount ? 
-                    `You've inspired ${artistData.bookingCount} events so far!` : 
+                    "You&apos;ve inspired " + artistData.bookingCount + " events so far!" : 
                     "Start your journey to inspire events!"
                   }
                 </p>
@@ -629,7 +629,7 @@ function ArtistDashboard() {
                     <div>
                       <h3 className="text-sm font-medium text-gray-500">Price per Hour</h3>
                       <p className="mt-1 text-sm text-gray-900">
-                        {artistData?.details.pricing45 ? `₹${artistData.details.pricing45}` : 'Not set'}
+                        {artistData?.details.pricing45 ? '₹' + artistData.details.pricing45 : 'Not set'}
                       </p>
                     </div>
                   </div>

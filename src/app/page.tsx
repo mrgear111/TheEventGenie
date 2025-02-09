@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Search, Calendar, MapPin, ArrowRight, Star, Music } from 'lucide-react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
@@ -8,8 +8,6 @@ import ParticleBackground from '../components/ParticleBackground'
 
 export default function Home() {
   const [activeIndex, setActiveIndex] = useState(0)
-  const { scrollYProgress } = useScroll()
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.2])
 
   useEffect(() => {
     const interval = setInterval(() => {
