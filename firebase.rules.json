@@ -1,0 +1,16 @@
+{
+  "rules": {
+    "Artists": {
+      "$uid": {
+        ".read": true,
+        ".write": "auth != null && auth.token.email.replace('.', '_').replace('@', 'AT') === $uid"
+      }
+    },
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    }
+  }
+} 
