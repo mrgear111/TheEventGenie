@@ -11,6 +11,11 @@
         ".read": "auth != null && auth.uid === $uid",
         ".write": "auth != null && auth.uid === $uid"
       }
+    },
+    "posts": {
+      ".read": true,
+      ".write": "auth != null",
+      ".indexOn": ["createdAt"]
     }
   }
 } 

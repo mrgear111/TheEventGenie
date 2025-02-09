@@ -4,11 +4,13 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useAuth } from '../../../context/AuthContext'
 import { useRouter } from 'next/navigation'
-import { database } from '../../../lib/firebase'
+import { database, storage } from '../../../lib/firebase'
 import { ref, get, set } from 'firebase/database'
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
 import Image from 'next/image'
 import { Calendar, Users, Star, Music, Clock, Camera, Edit, X, Instagram, Twitter, Facebook, Youtube } from 'lucide-react'
 import ScheduleModal from '../../../components/ScheduleModal'
+import CreatePostModal from '../../../components/CreatePostModal'
 
 interface ArtistData {
   approvalStatus: boolean
@@ -191,6 +193,7 @@ function ArtistDashboard() {
   const [updating, setUpdating] = useState(false)
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false)
+  const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false)
 
   useEffect(() => {
     if (!user?.email) {
@@ -319,6 +322,47 @@ function ArtistDashboard() {
       console.error('Error unblocking date:', error);
     }
   };
+
+  const handleCreatePost = async (postData: {
+    content: string
+    mediaUrl?: string
+    mediaType?: 'image' | 'video' | 'audio'
+    mediaFile?: File | null
+  }) => {
+    if (!user?.email) return
+    
+    try {
+      const safeKey = user.email.replace(/[.#$[\]]/g, '_').replace('@', 'AT')
+      const postRef = ref(database, `posts/${Date.now()}`)
+      
+      let mediaUrl = undefined
+      let mediaType = undefined
+
+      // If there's a media file, upload it first
+      if (postData.mediaFile) {
+        const fileRef = storageRef(storage, `posts/${safeKey}/${Date.now()}-${postData.mediaFile.name}`)
+        await uploadBytes(fileRef, postData.mediaFile)
+        mediaUrl = await getDownloadURL(fileRef)
+        mediaType = postData.mediaFile.type.split('/')[0]
+      }
+
+      // Create post object with only defined values
+      const post = {
+        artistId: safeKey,
+        content: postData.content,
+        ...(mediaUrl && { mediaUrl }),
+        ...(mediaType && { mediaType }),
+        createdAt: new Date().toISOString(),
+        likes: 0,
+        comments: 0
+      }
+
+      await set(postRef, post)
+    } catch (error) {
+      console.error('Error creating post:', error)
+      throw error // Re-throw to handle in the modal
+    }
+  }
 
   if (loading) {
     return (
@@ -811,6 +855,13 @@ function ArtistDashboard() {
                     gradient: 'from-green-500 to-emerald-500',
                     hoverGradient: 'hover:from-green-600 hover:to-emerald-600',
                     onClick: () => {}
+                  },
+                  {
+                    label: 'Create Post',
+                    icon: Camera,
+                    gradient: 'from-orange-500 to-red-500',
+                    hoverGradient: 'hover:from-orange-600 hover:to-red-600',
+                    onClick: () => setIsCreatePostModalOpen(true)
                   }
                 ].map((action, index) => (
                   <motion.button
@@ -836,6 +887,12 @@ function ArtistDashboard() {
           busyDays={artistData?.busyDays || {}}
           onBlockDate={handleBlockDate}
           onUnblockDate={handleUnblockDate}
+        />
+
+        <CreatePostModal
+          isOpen={isCreatePostModalOpen}
+          onClose={() => setIsCreatePostModalOpen(false)}
+          onCreatePost={handleCreatePost}
         />
       </div>
     </div>
