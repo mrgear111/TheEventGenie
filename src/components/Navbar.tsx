@@ -8,7 +8,6 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { auth } from '../lib/firebase'
 import { signOut } from 'firebase/auth'
-import CitySelector from './CitySelector'
 import LoginModal from './LoginModal'
 
 export default function Navbar() {
@@ -120,16 +119,6 @@ export default function Navbar() {
 
             {/* Right Section */}
             <div className="flex items-center gap-4">
-              <motion.button 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setIsCitySelectorOpen(true)}
-                className="flex items-center gap-1 text-gray-600 hover:text-gray-900 bg-gray-50 px-3 py-1 rounded-full text-sm"
-              >
-                <MapPin className="w-3 h-3" />
-                <span>{selectedCity || "Select your city"}</span>
-              </motion.button>
-
               <div className="flex items-center gap-4">
                 <Link 
                   href="/search"
@@ -247,12 +236,6 @@ export default function Navbar() {
       </AnimatePresence>
 
       {/* City Selector */}
-      <CitySelector
-        isOpen={isCitySelectorOpen}
-        onClose={() => setIsCitySelectorOpen(false)}
-        onSelect={setSelectedCity}
-        currentCity={selectedCity || ""}
-      />
 
       <LoginModal 
         isOpen={isLoginModalOpen}
