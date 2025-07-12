@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Search, Calendar, MapPin, ArrowRight, Star, Music } from 'lucide-react'
+import { MapPin, Star } from 'lucide-react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import ParticleBackground from '../components/ParticleBackground'
@@ -20,7 +20,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-white overflow-hidden">
       {/* Hero Section */}
-      <section className="relative min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      <section className="relative flex flex-col items-center pt-48 pb-8 bg-gradient-to-b from-gray-50 to-white">
         {/* Enhanced Background Effects */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-full blur-3xl animate-pulse" />
@@ -28,8 +28,8 @@ export default function Home() {
         </div>
 
         {/* Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 h-screen">
-          <div className="grid lg:grid-cols-2 gap-12 items-center h-full">
+        <div className="relative z-10 max-w-7xl mx-auto px-4">
+          <div className="flex flex-col items-center justify-center">
             {/* Left Content */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
@@ -37,23 +37,6 @@ export default function Home() {
               transition={{ duration: 0.8 }}
               className="space-y-8"
             >
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="inline-flex items-center"
-              >
-                <span className="relative inline-block px-6 py-2 rounded-full border border-blue-100 bg-blue-50/50 text-blue-600 text-sm font-medium">
-                  <span className="relative z-10">#1 Artist Booking Platform</span>
-                  <motion.span 
-                    className="absolute inset-0 rounded-full bg-blue-100/50"
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.3 }}
-                  />
-                </span>
-              </motion.div>
-
               <div className="space-y-4">
                 <motion.h1 
                   className="text-6xl md:text-7xl font-bold text-center mb-6"
@@ -73,31 +56,13 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="text-gray-600 text-xl text-center max-w-3xl mx-auto mb-12"
+                className="text-gray-600 text-xl text-center max-w-3xl mx-auto mb-6"
               >
                 Discover and book the perfect artists for your events. From live bands to DJs, 
                 we&apos;ve got the talent you need to make your event unforgettable.
               </motion.p>
 
-              {/* Enhanced Search Bar */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="max-w-2xl mx-auto mb-20"
-              >
-                <div className="relative">
-                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    type="text"
-                    placeholder="Search for artists, bands, or venues..."
-                    className="w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-transparent transition-all duration-300 text-gray-700 placeholder-gray-400"
-                  />
-                  <button className="absolute right-2 top-1/2 transform -translate-y-1/2 px-6 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-full hover:shadow-lg hover:shadow-indigo-500/25 transition-all duration-300">
-                    Search
-                  </button>
-                </div>
-              </motion.div>
+
 
               {/* Popular Tags */}
               <motion.div 
