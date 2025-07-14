@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Mail, Phone, MapPin, Linkedin, Instagram, Twitter } from 'lucide-react'
+import { Mail, Phone, MapPin, Instagram } from 'lucide-react'
 import Link from 'next/link'
 
 export default function Contact() {
@@ -117,7 +117,8 @@ export default function Contact() {
                   </div>
                   <div>
                     <h3 className="font-medium text-white">Email</h3>
-                    <p className="text-gray-400">contact@eventgenie.com</p>
+                    <p className="text-gray-400">mrgear111@gmail.com</p>
+                        <p className="text-gray-400">mudit292005@gmail.com</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -126,7 +127,8 @@ export default function Contact() {
                   </div>
                   <div>
                     <h3 className="font-medium text-white">Phone</h3>
-                    <p className="text-gray-400">+91 98765 43210</p>
+                    <p className="text-gray-400">+91 89553 88304</p>
+                        <p className="text-gray-400">+91 96724 67580</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -135,7 +137,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <h3 className="font-medium text-white">Location</h3>
-                    <p className="text-gray-400">Panchkula, Haryana</p>
+                    <p className="text-gray-400">Jaipur</p>
                     <p className="text-sm text-gray-500">India</p>
                   </div>
                 </div>
@@ -151,37 +153,12 @@ export default function Contact() {
             >
               <h3 className="font-semibold mb-4">Follow Our Journey</h3>
               <div className="flex gap-4">
-                <Link href="#" className="p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors">
-                  <Linkedin className="w-5 h-5" />
-                </Link>
-                <Link href="#" className="p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors">
+                <Link href="https://www.instagram.com/youreventgenie/" target="_blank" rel="noopener" className="p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors">
                   <Instagram className="w-5 h-5" />
-                </Link>
-                <Link href="#" className="p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors">
-                  <Twitter className="w-5 h-5" />
                 </Link>
               </div>
             </motion.div>
 
-            {/* Join Team Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="bg-gray-800/90 backdrop-blur-xl p-8 rounded-2xl border border-gray-700"
-            >
-              <h3 className="font-semibold mb-2 text-white">Join Our Team! 🚀</h3>
-              <p className="text-gray-400 text-sm mb-4">
-                We&apos;re looking for passionate individuals to help revolutionize the artist booking industry.
-              </p>
-              <Link 
-                href="/careers" 
-                className="inline-flex items-center gap-2 text-sm text-indigo-400 hover:text-indigo-300 transition-colors"
-              >
-                View Open Positions
-                <span className="text-xl">→</span>
-              </Link>
-            </motion.div>
           </div>
         </div>
       </div>
