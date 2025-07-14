@@ -21,7 +21,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-white overflow-hidden">
       {/* Hero Section */}
-      <section className="relative flex flex-col items-center pt-48 pb-8 bg-gradient-to-b from-gray-50 to-white">
+      <section className="relative flex flex-col items-center pt-64 pb-8 bg-gradient-to-b from-gray-50 to-white">
         {/* Enhanced Background Effects */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-full blur-3xl animate-pulse" />
@@ -70,7 +70,7 @@ export default function Home() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6 }}
-                className="flex flex-wrap gap-2"
+                className="flex flex-wrap gap-2 justify-center"
               >
                 {['Live Band', 'DJ', 'Classical', 'Rock', 'Jazz'].map((tag, i) => (
                   <motion.button
